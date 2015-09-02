@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+begin
+  require 'oxidized/fetch/cli'
+  puts Oxidized::Fetch::CLI.new.run
+rescue => error
+  warn "#{error}"
+  raise if Oxidized::CFG.debug
+end
