@@ -23,6 +23,7 @@ module Oxidized
       def opts_parse
         slop = Slop.new(:help=>true)
         slop.banner 'Usage: oxf [options] hostname'
+        slop.on 'g=', '--group',     'host group'
         slop.on 'm=', '--model',     'host model (ios, junos, etc), otherwise discovered from Oxidized source'
         slop.on 'u=', '--username',  'username to use'
         slop.on 'p=', '--password',  'password to use'
@@ -40,7 +41,7 @@ module Oxidized
       def connect
         opts = {}
         opts[:host]     = @host
-        [:model, :username, :password, :timeout, :enable, :verbose, :community, :protocols].each do |key|
+        [:group, :model, :username, :password, :timeout, :enable, :verbose, :community, :protocols].each do |key|
           opts[key] = @opts[key] if @opts[key]
         end
         @oxf = Fetch.new opts

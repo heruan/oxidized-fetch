@@ -27,6 +27,7 @@ module Oxidized
     # @yieldreturn [self] if called in block, returns self and disconnnects session after exiting block
     # @return [void]
     def initialize opts, &block
+      group       = opts.delete :group
       host        = opts.delete :host
       model       = opts.delete :model
       timeout     = opts.delete :timeout
@@ -60,6 +61,7 @@ module Oxidized
         raise NoNode, 'node not found' unless node
         @node = Node.new :name=>host, :model=>node[:model]
       end
+      @node.group[:group] = group if group
       @node.auth[:username] = username if username
       @node.auth[:password] = password if password
       CFG.vars.enable = enable if enable
