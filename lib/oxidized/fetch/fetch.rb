@@ -42,6 +42,7 @@ module Oxidized
       @@oxi ||= false
       if not @@oxi
         Oxidized.mgr = Manager.new
+        Oxidized.Hooks = HookManager.from_config CFG
         @@oxi = true
       end
 
@@ -69,16 +70,19 @@ module Oxidized
 
       status, config = @node.run
       if status == :success
+        Oxidized.Hooks.handle :node_success, :node => @node
         msg = "update #{@node.name}"
         msg += " from #{@node.from}" if @node.from
         msg += " with message '#{@node.msg}'" if @node.msg
         if @node.output.new.store @node.name, config, :msg => msg, :user => @node.user, :group => @node.group
+          Oxidized.Hooks.handle :post_store, :node => @node
           STDERR.write "Configuration updated for #{@node.group}/#{@node.name}\n" if @verbose
           exit 1
         end
         STDERR.write "Configuration NOT updated for #{@node.group}/#{@node.name}\n" if @verbose
         exit 0
       else
+        Oxidized.Hooks.handle :node_fail, :node => @node
         STDERR.write "An unexpected error occurred\n" if @verbose
         exit -1
       end
