@@ -19,12 +19,12 @@ module Oxidized
     # @option opts [String]  :model     node model (ios, junos etc) if defined, nodes are not loaded from source
     # @option opts [Fixnum]  :timeout   oxidized timeout
     # @option opts [String]  :username  username for login
-    # @option opts [String]  :passsword password for login
+    # @option opts [String]  :password password for login
     # @option opts [String]  :enable    enable password to use
     # @option opts [String]  :community community to use for discovery
     # @option opts [String]  :protocols protocols to use to connect, default "ssh ,telnet"
     # @option opts [boolean] :verbose   extra output, e.g. show command given in output
-    # @yieldreturn [self] if called in block, returns self and disconnnects session after exiting block
+    # @yieldreturn [self] if called in block, returns self and disconnects session after exiting block
     # @return [void]
     def initialize opts, &block
       group       = opts.delete :group
@@ -36,13 +36,13 @@ module Oxidized
       enable      = opts.delete :enable
       community   = opts.delete :community
       @verbose    = opts.delete :verbose
-      CFG.input.default = opts.delete :protocols if opts[:protocols]
+      Oxidized.config.input.default = opts.delete :protocols if opts[:protocols]
       raise InvalidOption, "#{opts} not recognized" unless opts.empty?
 
       @@oxi ||= false
       if not @@oxi
         Oxidized.mgr = Manager.new
-        Oxidized.Hooks = HookManager.from_config CFG
+        Oxidized.Hooks = HookManager.from_config(Oxidized.config)
         @@oxi = true
       end
 
