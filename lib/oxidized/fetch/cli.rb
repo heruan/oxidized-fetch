@@ -14,7 +14,9 @@ module Oxidized
 
       def initialize
         @args, @opts = opts_parse
-        CFG.debug = true if @opts[:debug]
+	Config.load(@opts)
+        Oxidized.setup_logger
+        Oxidized.config.debug = true if @opts[:debug]
         @host = @args.shift
         @oxf  = nil
         raise NothingToDo, 'no host given' if not @host

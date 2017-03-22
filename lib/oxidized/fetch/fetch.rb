@@ -36,13 +36,13 @@ module Oxidized
       enable      = opts.delete :enable
       community   = opts.delete :community
       @verbose    = opts.delete :verbose
-      CFG.input.default = opts.delete :protocols if opts[:protocols]
+      Oxidized.config.input.default = opts.delete :protocols if opts[:protocols]
       raise InvalidOption, "#{opts} not recognized" unless opts.empty?
 
       @@oxi ||= false
       if not @@oxi
         Oxidized.mgr = Manager.new
-        Oxidized.Hooks = HookManager.from_config CFG
+        Oxidized.Hooks = HookManager.from_config(Oxidized.config)
         @@oxi = true
       end
 
